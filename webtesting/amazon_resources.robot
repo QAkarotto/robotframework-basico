@@ -1,30 +1,32 @@
 *** Settings ***
-Library    SeleniumLibrary
+Library     SeleniumLibrary
 
 
 *** Variables ***
-${BROWSER}                chrome
-${URL}                    http://www.amazon.com.br
-${MENU_ELETRONICOS}       //a[@href='/Eletronicos-e-Tecnologia/b/?ie=UTF8&node=16209062011&ref_=nav_cs_electronics'][contains(.,'Eletrônicos')]
-${HEADER_ELETRONICOS}     //h1[contains(.,'Eletrônicos e Tecnologia')]
-${BARRA_PESQUISA}         twotabsearchtextbox
-${BOTAO_PESQUISAR}        nav-search-submit-button
+${BROWSER}                  chrome
+${URL}                      http://www.amazon.com.br
+${MENU_ELETRONICOS}
+...                         //a[@href='/Eletronicos-e-Tecnologia/b/?ie=UTF8&node=16209062011&ref_=nav_cs_electronics'][contains(.,'Eletrônicos')]
+${HEADER_ELETRONICOS}       //h1[contains(.,'Eletrônicos e Tecnologia')]
+${BARRA_PESQUISA}           twotabsearchtextbox
+${BOTAO_PESQUISAR}          nav-search-submit-button
+${BOTAO_CARRINHO}           //span[@aria-hidden='true'][contains(.,'Carrinho')]
+${TITULO_CARRINHO_VAZIO}           //h1[@class='a-spacing-mini a-spacing-top-base'][contains(.,'Seu carrinho de compras da Amazon está vazio.')]
 
 *** Keywords ***
 Abrir o navegador
     Open Browser    browser=${BROWSER}
     Maximize Browser Window
 
-
 Fechar o navegador
     Capture Page Screenshot
-    #Close Browser
+    Close Browser
 
 Acessar a homepage do site Amazon.com.br
     Go To    url=${URL}
-    Wait Until Element Is Visible    locator=${MENU_ELETRONICOS}
 
 Entrar no Menu "Eletrônicos"
+    Wait Until Element Is Visible    locator=${MENU_ELETRONICOS}
     Click Element    locator=${MENU_ELETRONICOS}
 
 Verificar se aparece a frase "${TEXTO_ELETRONICOS}"
@@ -39,12 +41,30 @@ Verificar se aparece a categoria "${NOME_CATEGORIA}"
 
 Digitar o nome de produto "${NOME_PRODUTO}" no campo de pesquisa
     Input Text    locator=${BARRA_PESQUISA}    text=${NOME_PRODUTO}
-    
+
 Clicar no botão de pesquisa
     Click Element    locator=${BOTAO_PESQUISAR}
 
 Verificar se o resultado da pesquisa está listando o produto "${NOME_PRODUTO}"
     Wait Until Element Is Visible    locator=(//span[@class='a-size-base-plus a-color-base a-text-normal'][contains(.,'${NOME_PRODUTO}')])
+
+Adicionar o produto "${NOME_PRODUTO}" no carrinho
+    Click Element    locator=(//span[@class='a-size-base-plus a-color-base a-text-normal'][contains(.,'${NOME_PRODUTO}')])
+    Wait Until Element Is Visible    locator=add-to-cart-button
+    Click Element    locator=add-to-cart-button
+
+Verificar se o produto "${NOME_PRODUTO}" foi adicionado com sucesso
+    Click Element    locator=${BOTAO_CARRINHO}
+    Wait Until Element Is Visible    locator=//span[@class='a-truncate-cut'][contains(.,'${NOME_PRODUTO}')]
+
+Remover o produto "${NOME_PRODUTO}" do carrinho
+    Click Element    locator=//input[contains(@aria-label,'Excluir ${NOME_PRODUTO}')]
+    #input[aria-label="Excluir ${NOME_PRODUTO}]
+    
+
+Verificar se o carrinho fica vazio
+    Wait Until Element Is Visible    locator=${TITULO_CARRINHO_VAZIO} 
+#//span[@class='a-size-base'][contains(.,'${NOME_PRODUTO} Abre em uma nova aba  foi removido de Carrinho de compras.')]
 
 # GHERKIN STEPS
 
