@@ -59,12 +59,11 @@ Verificar se o produto "${NOME_PRODUTO}" foi adicionado com sucesso
 
 Remover o produto "${NOME_PRODUTO}" do carrinho
     Click Element    locator=//input[contains(@aria-label,'Excluir ${NOME_PRODUTO}')]
-    #input[aria-label="Excluir ${NOME_PRODUTO}]
     
 
 Verificar se o carrinho fica vazio
     Wait Until Element Is Visible    locator=${TITULO_CARRINHO_VAZIO} 
-#//span[@class='a-size-base'][contains(.,'${NOME_PRODUTO} Abre em uma nova aba  foi removido de Carrinho de compras.')]
+
 
 # GHERKIN STEPS
 
@@ -93,3 +92,25 @@ Então o título da página deve ficar "Amazon.com.br : Xbox Series S"
 
 E um produto da linha "Xbox Series S" deve ser mostrado na página
     Verificar se o resultado da pesquisa está listando o produto "Xbox Series S"
+
+Quando adicionar o produto "Console Xbox Series S" no carrinho
+    Digitar o nome de produto "Xbox Series S" no campo de pesquisa
+    Clicar no botão de pesquisa
+    Verificar se o resultado da pesquisa está listando o produto "Console Xbox Series S"
+    Adicionar o produto "Console Xbox Series S" no carrinho
+
+Então o produto "Console Xbox Series S" deve ser mostrado no carrinho
+    Verificar se o produto "Console Xbox Series S" foi adicionado com sucesso
+
+E existe o produto "Console Xbox Series S" no carrinho
+    Digitar o nome de produto "Xbox Series S" no campo de pesquisa
+    Clicar no botão de pesquisa
+    Verificar se o resultado da pesquisa está listando o produto "Console Xbox Series S"
+    Adicionar o produto "Console Xbox Series S" no carrinho
+    Verificar se o produto "Console Xbox Series S" foi adicionado com sucesso
+
+Quando remover o produto "Console Xbox Series S" do carrinho
+    Remover o produto "Console Xbox Series S" do carrinho
+
+Então o carrinho deve ficar vazio
+    Verificar se o carrinho fica vazio
